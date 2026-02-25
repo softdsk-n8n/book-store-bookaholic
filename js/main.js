@@ -67,12 +67,29 @@ async function loadCartData() {
     try {
         ui.setCartLoading(true);
 
-        if (!store.cart) {
-            store.cart = { id: 'local', products: [], totalQuantity: 0, total: 0, discountedTotal: 0 };
+        // Если пользователь авторизован, пытаемся загрузить его корзину вместо локальной
+        if (store.token && store.userId) {
+            const userCart = await apiDummy.fetchCart(store.userId);
+            if (userCart) {
+                // Переносим данные API в формат локального хранилища
+                store.cart = {
+                    id: userCart.id,
+                    products: userCart.products,
+                    totalQuantity: userCart.totalQuantity,
+                    total: userCart.total,
+                    discountedTotal: userCart.discountedTotal
+                };
+            } else {
+                store.cart = { id: 'local', products: [], totalQuantity: 0, total: 0, discountedTotal: 0 };
+            }
+            store.save();
+        } else {
+            // Если гость, опираемся на уже сохраненную (или пустую) локальную корзину
+            if (!store.cart) {
+                store.cart = { id: 'local', products: [], totalQuantity: 0, total: 0, discountedTotal: 0 };
+                store.save();
+            }
         }
-
-        // В реальном приложении здесь был бы API вызов для залогиненного пользователя
-        // Для демонстрации мы фокусируемся на локальной корзине (гостевой и авторизованной)
 
         ui.updateCartBadge(store.cart.totalQuantity);
         await ui.renderCartItems(store.cart);
