@@ -207,6 +207,9 @@ function setupEventListeners() {
             const { token, userId } = await apiDummy.login(username, password);
             store.token = token;
             store.userId = userId;
+
+            // Очищаем локальную/гостевую корзину, чтобы она не перетекала в аккаунт
+            store.cart = { id: 'local', products: [], totalQuantity: 0, total: 0, discountedTotal: 0 };
             store.save();
 
             ui.updateAuthNav(true, username);
