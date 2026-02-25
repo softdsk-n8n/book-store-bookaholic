@@ -637,4 +637,17 @@ button {
     .product-title {
         font-size: 0.95rem;
     }
+
+    .norbie-easter-egg {
+        display: none;
+    }
+}
+
+.norbie-easter-egg {
+    position: absolute;
+    right: 15px;
+    bottom: calc(100% - 25px);
+    height: 95px;
+    z-index: 10;
+    pointer-events: none;
 }

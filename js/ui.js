@@ -47,8 +47,12 @@ export const ui = {
         if (this.els.profileScreen) this.els.profileScreen.classList.add('hidden');
 
         this.els.navStore.classList.remove('active');
+        this.els.navStore.classList.remove('active');
         this.els.navCart.classList.remove('active');
         if (this.els.navProfile) this.els.navProfile.classList.remove('active');
+
+        // Скроллим к началу страницы при смене экрана
+        window.scrollTo({ top: 0, behavior: 'instant' });
 
         if (screenName === 'store') {
             this.els.storeScreen.classList.remove('hidden');
