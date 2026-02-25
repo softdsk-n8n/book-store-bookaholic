@@ -66,6 +66,16 @@ export const ui = {
             if (this.els.profileScreen) this.els.profileScreen.classList.remove('hidden');
             if (this.els.navProfile) this.els.navProfile.classList.add('active');
         }
+
+        // Обновление нижней навигации (мобильная)
+        const bottomNavItems = document.querySelectorAll('.bottom-nav-item');
+        bottomNavItems.forEach(item => {
+            item.classList.remove('active');
+            const target = item.dataset.screen;
+            if (target === screenName || (screenName === 'profile' && target === 'login')) {
+                item.classList.add('active');
+            }
+        });
     },
 
     // Обновление состояния шапки (Авторизация)
@@ -94,11 +104,35 @@ export const ui = {
             if (this.els.checkoutAuthBox) this.els.checkoutAuthBox.classList.add('hidden');
             if (this.els.checkoutGuestBox) this.els.checkoutGuestBox.classList.remove('hidden');
         }
+
+        // Обновление кнопки аккаунта в нижней навигации
+        const bnavAccount = document.getElementById('bnav-account');
+        const bnavLabel = document.getElementById('bnav-account-label');
+        if (bnavAccount && bnavLabel) {
+            if (isAuth) {
+                bnavAccount.dataset.screen = 'profile';
+                bnavLabel.textContent = 'Профиль';
+            } else {
+                bnavAccount.dataset.screen = 'login';
+                bnavLabel.textContent = 'Войти';
+            }
+        }
     },
 
     // Обновление бейджика в корзине
     updateCartBadge(count) {
         this.els.cartBadge.textContent = count || '0';
+
+        // Обновление бейджа нижней навигации
+        const bnavBadge = document.getElementById('bnav-cart-badge');
+        if (bnavBadge) {
+            bnavBadge.textContent = count || '0';
+            if (count > 0) {
+                bnavBadge.classList.remove('hidden');
+            } else {
+                bnavBadge.classList.add('hidden');
+            }
+        }
     },
 
     // Рендер категорий

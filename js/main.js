@@ -257,6 +257,25 @@ function setupEventListeners() {
         }
     });
 
+    // Мобильный тоггл жанров
+    const genreToggle = document.getElementById('genre-toggle');
+    const genreToggleLabel = document.getElementById('genre-toggle-label');
+
+    if (genreToggle) {
+        genreToggle.addEventListener('click', () => {
+            genreToggle.classList.toggle('open');
+            ui.els.categoryList.classList.toggle('open');
+        });
+
+        // Закрытие при клике вне меню
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.sidebar')) {
+                genreToggle.classList.remove('open');
+                ui.els.categoryList.classList.remove('open');
+            }
+        });
+    }
+
     // Смена категории в витрине
     ui.els.categoryList.addEventListener('click', (e) => {
         const li = e.target.closest('.category-item');
@@ -266,6 +285,14 @@ function setupEventListeners() {
             document.querySelectorAll('.category-item').forEach(el => el.classList.remove('active'));
             li.classList.add('active');
             loadStoreData(genre);
+        }
+        // Закрываем мобильный дропдаун и обновляем лейбл
+        if (genreToggle) {
+            genreToggle.classList.remove('open');
+            ui.els.categoryList.classList.remove('open');
+            if (genreToggleLabel) {
+                genreToggleLabel.textContent = li.textContent;
+            }
         }
     });
 
@@ -311,6 +338,25 @@ function setupEventListeners() {
                 apiDummy.updateCartQuantity(store.cart.id, productId, existing ? existing.quantity : 1).catch(console.error);
             }
         }
+    });
+
+    // Мобильная нижняя навигация
+    const bottomNavItems = document.querySelectorAll('.bottom-nav-item');
+    bottomNavItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const screen = item.dataset.screen;
+            if (screen === 'store') {
+                ui.showScreen('store');
+                loadStoreData(appState.activeCategory);
+            } else if (screen === 'cart') {
+                loadCartData();
+                ui.showScreen('cart');
+            } else if (screen === 'login') {
+                ui.showScreen('login');
+            } else if (screen === 'profile') {
+                ui.showScreen('profile');
+            }
+        });
     });
 }
 
