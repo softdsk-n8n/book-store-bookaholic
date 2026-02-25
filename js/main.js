@@ -46,7 +46,16 @@ async function loadStoreData(category = '') {
 
         ui.renderCategories(categories, appState.activeCategory);
         ui.renderProducts(products);
-        ui.els.currentCategoryTitle.textContent = category === 'All' || !category ? 'Все книги' : category;
+
+        if (category === 'All' || !category) {
+            ui.els.currentCategoryTitle.textContent = 'Все книги';
+            document.title = 'Все книги - Bookaholic';
+        } else {
+            const catObj = categories.find(c => c.slug === category);
+            const translatedName = catObj ? catObj.name : category;
+            ui.els.currentCategoryTitle.textContent = translatedName;
+            document.title = `${translatedName} - Bookaholic`;
+        }
     } catch (e) {
         console.error('Ошибка загрузки витрины', e);
         ui.els.productsGrid.innerHTML = '<p>Ошибка загрузки товаров</p>';
